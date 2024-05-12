@@ -1,0 +1,30 @@
+name: MAIN
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests-php8:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php-versions: ['8.1', '8.2', '8.3']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+
+      - name: Install dependencies
+        run: composer require -W phpunit/phpunit
+
+      - name: Run tests
+        run: composer run-script test
